@@ -14,6 +14,6 @@ module.exports = {
     }
   },
   extends: [
-    '@ameinhardt/eslint-config'
+    '@ameinhardt'
   ]
 };

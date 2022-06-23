@@ -22,7 +22,7 @@ module.exports = {
   env: {
     browser: true
   },
-  extends: ['@ameinhardt'],
+  extends: ['@ameinhardt/eslint-config/typescript'],
   rules: {
     'no-console':
       process.env.NODE_ENV === 'production' ? ['warn', { allow: ['log', 'debug', 'info', 'warn', 'error'] }] : 'off'
