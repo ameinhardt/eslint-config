@@ -1,5 +1,7 @@
 module.exports = {
-  root: true,
+  env: {
+    es2021: true
+  },
   extends: [
     'standard',
     'eslint:recommended',
@@ -8,88 +10,7 @@ module.exports = {
     'plugin:jsonc/recommended-with-jsonc',
     'plugin:unicorn/recommended'
   ],
-  parserOptions: {
-    ecmaVersion: '2021'
-  },
-  env: {
-    es2021: true
-  },
   ignorePatterns: ['dist', 'node_modules'],
-  reportUnusedDisableDirectives: true,
-  settings: {
-    'import/resolver': {
-      node: { extensions: ['.js', '.jsx', '.mjs'] }
-    }
-  },
-  plugins: ['unicorn'],
-  rules: {
-    semi: ['error', 'always'],
-    eqeqeq: ['error', 'always', {
-      null: 'ignore'
-    }],
-    'space-before-function-paren': ['error', {
-      asyncArrow: 'always',
-      anonymous: 'never',
-      named: 'never'
-    }],
-    'import/named': 'off',
-    'no-console': 'error', // [process.env.NODE_ENV === 'production' ? 'error' : 'off'],
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
-    'import/order': [
-      'error',
-      {
-        alphabetize: { order: 'asc' },
-        pathGroups: [
-          {
-            pattern: '@/**',
-            group: 'parent'
-          }
-        ],
-        'newlines-between': 'never',
-        pathGroupsExcludedImportTypes: []
-      }
-    ],
-    'max-lines': ['error', 300],
-    camelcase: [
-      'error',
-      {
-        properties: 'always'
-      }
-    ],
-    'consistent-return': ['off'],
-    'default-case': ['error'],
-    // temporary because of https://github.com/babel/babel-eslint/issues/799 :
-    'template-curly-spacing': ['off'],
-    'no-multi-spaces': 'off',
-    'no-shadow': ['warn'],
-    'no-unused-vars': ['warn'],
-    'no-unused-expressions': 'off',
-    'no-use-before-define': [
-      'error',
-      {
-        functions: true,
-        classes: true,
-        variables: true
-      }
-    ],
-    'one-var': [
-      'error',
-      {
-        var: 'always',
-        let: 'always',
-        const: 'consecutive',
-        separateRequires: true
-      }
-    ],
-    'vars-on-top': 'error',
-    'prefer-template': 'warn',
-    'promise/param-names': 'warn',
-    'promise/always-return': 'warn',
-    'promise/catch-or-return': 'warn',
-    'import/no-extraneous-dependencies': 'error',
-    'unicorn/filename-case': 'off',
-    'unicorn/no-null': 'off'
-  },
   overrides: [{
     files: ['.eslintrc.js'],
     rules: {
@@ -103,21 +24,20 @@ module.exports = {
       'jsonc/comma-dangle': ['error', 'never'],
       'jsonc/comma-style': ['error', 'last'],
       'jsonc/indent': ['error', 2],
-      'jsonc/key-spacing': ['error', { beforeColon: false, afterColon: true }],
+      'jsonc/key-spacing': ['error', { afterColon: true, beforeColon: false }],
       'jsonc/no-octal-escape': 'error',
-      'jsonc/object-curly-newline': ['error', { multiline: true, consistent: true }],
+      'jsonc/object-curly-newline': ['error', { consistent: true, multiline: true }],
       'jsonc/object-curly-spacing': ['error', 'always'],
       'jsonc/object-property-newline': ['error', { allowMultiplePropertiesPerLine: true }]
     }
   }, {
+    extends: ['plugin:jsonc/recommended-with-json'],
     files: ['package.json'],
     parser: 'jsonc-eslint-parser',
-    extends: ['plugin:jsonc/recommended-with-json'],
     rules: {
       'jsonc/sort-keys': [
         'error',
         {
-          pathPattern: '^$',
           order: [
             'publisher',
             'name',
@@ -162,21 +82,104 @@ module.exports = {
             'simple-git-hooks',
             'lint-staged',
             'eslintConfig'
-          ]
+          ],
+          pathPattern: '^$'
         },
         {
-          pathPattern: '^(?:dev|peer|optional|bundled)?[Dd]ependencies$',
-          order: { type: 'asc' }
+          order: { type: 'asc' },
+          pathPattern: '^(?:dev|peer|optional|bundled)?[Dd]ependencies$'
         },
         {
-          pathPattern: '^exports.*$',
           order: [
             'types',
+            'import',
             'require',
-            'import'
-          ]
+            'default'
+          ],
+          pathPattern: '^exports.*$'
         }
       ]
     }
-  }]
+  }],
+  parserOptions: {
+    ecmaVersion: '2021'
+  },
+  plugins: ['unicorn', 'sort-keys'],
+  reportUnusedDisableDirectives: true,
+  root: true,
+  rules: {
+    camelcase: [
+      'error',
+      {
+        properties: 'always'
+      }
+    ],
+    'consistent-return': ['off'],
+    'default-case': ['error'],
+    eqeqeq: ['error', 'always', {
+      null: 'ignore'
+    }],
+    'import/named': 'off',
+    'import/no-extraneous-dependencies': 'error',
+    'import/order': [
+      'error',
+      {
+        alphabetize: { order: 'asc' },
+        'newlines-between': 'never',
+        pathGroups: [
+          {
+            group: 'parent',
+            pattern: '@/**'
+          }
+        ],
+        pathGroupsExcludedImportTypes: []
+      }
+    ],
+    'max-lines': ['error', 300],
+    'no-console': 'error', // [process.env.NODE_ENV === 'production' ? 'error' : 'off'],
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+    'no-multi-spaces': 'off',
+    'no-shadow': ['warn'],
+    'no-unused-expressions': 'off',
+    'no-unused-vars': ['warn'],
+    'no-use-before-define': [
+      'error',
+      {
+        classes: true,
+        functions: true,
+        variables: true
+      }
+    ],
+    'one-var': [
+      'error',
+      {
+        const: 'consecutive',
+        let: 'always',
+        separateRequires: true,
+        var: 'always'
+      }
+    ],
+    'prefer-template': 'warn',
+    'promise/always-return': 'warn',
+    'promise/catch-or-return': 'warn',
+    'promise/param-names': 'warn',
+    semi: ['error', 'always'],
+    'sort-keys': 0,
+    'sort-keys/sort-keys-fix': 'error',
+    'space-before-function-paren': ['error', {
+      anonymous: 'never',
+      asyncArrow: 'always',
+      named: 'never'
+    }],
+    // temporary because of https://github.com/babel/babel-eslint/issues/799 :
+    'template-curly-spacing': ['off'],
+    'unicorn/filename-case': 'off',
+    'unicorn/no-null': 'off',
+    'vars-on-top': 'error'
+  },
+  settings: {
+    'import/resolver': {
+      node: { extensions: ['.js', '.jsx', '.mjs'] }
+    }
+  }
 };
